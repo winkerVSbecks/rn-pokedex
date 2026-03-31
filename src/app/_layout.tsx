@@ -17,6 +17,9 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="index" options={{ title: 'Pokédex' }} />
         <Stack.Screen name="pokemon/[id]" options={{ title: '' }} />
+        <Stack.Protected guard={__DEV__}>
+          <Stack.Screen name="storybook" />
+        </Stack.Protected>
       </Stack>
     </ThemeProvider>
   );
