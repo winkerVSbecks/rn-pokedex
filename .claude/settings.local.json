@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcrun simctl:*)",
+      "Bash(grep -E \"\\\\.\\(js|ts|json\\)$\")",
+      "WebFetch(domain:pokeapi.co)",
+      "Bash(npx expo:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

@@ -1,62 +1,108 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { useMemo, useState } from 'react';
+import { ActivityIndicator, SectionList, StyleSheet, View } from 'react-native';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
+import { PokemonCard } from '@/components/pokemon-card';
+import { SearchInput } from '@/components/search-input';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { TypeColors } from '@/constants/pokemon-types';
+import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { type PokemonEntry, usePokemonData } from '@/hooks/use-pokemon-data';
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
+const NUM_COLUMNS = 3;
+
+function chunk(arr: PokemonEntry[], size: number): PokemonEntry[][] {
+  const rows: PokemonEntry[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    rows.push(arr.slice(i, i + size));
   }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
+  return rows;
 }
 
 export default function HomeScreen() {
+  const { sections, isLoading, error } = usePokemonData();
+  const [query, setQuery] = useState('');
+  const router = useRouter();
+
+  const filteredSections = useMemo(() => {
+    const base = query.trim()
+      ? sections
+          .map((section) => ({
+            ...section,
+            data: section.data.filter((p) => p.name.includes(query.toLowerCase())),
+          }))
+          .filter((s) => s.data.length > 0)
+      : sections;
+
+    return base.map((section) => ({
+      typeName: section.typeName,
+      data: chunk(section.data, NUM_COLUMNS),
+    }));
+  }, [sections, query]);
+
+  if (isLoading) {
+    return (
+      <ThemedView style={styles.center}>
+        <ActivityIndicator size="large" />
+        <ThemedText themeColor="textSecondary" style={{ marginTop: Spacing.three }}>
+          Loading Pokémon...
+        </ThemedText>
+      </ThemedView>
+    );
+  }
+
+  if (error) {
+    return (
+      <ThemedView style={styles.center}>
+        <ThemedText>Error: {error}</ThemedText>
+      </ThemedView>
+    );
+  }
+
   return (
     <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
+      <SectionList
+        sections={filteredSections}
+        keyExtractor={(item) => item.map((p) => p.id).join('-')}
+        contentContainerStyle={styles.list}
+        stickySectionHeadersEnabled
+        ListHeaderComponent={
+          <View style={styles.searchWrapper}>
+            <SearchInput value={query} onChangeText={setQuery} />
+          </View>
+        }
+        renderSectionHeader={({ section }) => (
+          <ThemedView style={styles.sectionHeader}>
+            <View
+              style={[
+                styles.typeDot,
+                { backgroundColor: TypeColors[section.typeName] ?? '#888' },
+              ]}
+            />
+            <ThemedText style={styles.sectionTitle}>{section.typeName}</ThemedText>
+          </ThemedView>
+        )}
+        renderItem={({ item: row }) => (
+          <View style={styles.row}>
+            {row.map((pokemon) => (
+              <PokemonCard
+                key={pokemon.id}
+                id={pokemon.id}
+                name={pokemon.name}
+                onPress={() => router.push(`/pokemon/${pokemon.id}`)}
+              />
+            ))}
+            {/* Fill remaining space if row is incomplete */}
+            {row.length < NUM_COLUMNS &&
+              Array.from({ length: NUM_COLUMNS - row.length }).map((_, i) => (
+                <View key={`spacer-${i}`} style={styles.spacer} />
+              ))}
+          </View>
+        )}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
+      />
     </ThemedView>
   );
 }
@@ -64,35 +110,50 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
   },
-  safeArea: {
+  center: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    alignItems: 'center',
   },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
+  list: {
     paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+    paddingBottom: Spacing.six,
+    maxWidth: MaxContentWidth,
+    width: '100%',
+    alignSelf: 'center',
+  },
+  searchWrapper: {
+    paddingVertical: Spacing.three,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    paddingVertical: Spacing.two,
+    paddingHorizontal: Spacing.one,
+  },
+  typeDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    textTransform: 'capitalize',
+  },
+  row: {
+    flexDirection: 'row',
+    gap: Spacing.two,
+  },
+  spacer: {
+    flex: 1,
+  },
+  separator: {
+    height: Spacing.two,
+  },
+  sectionSeparator: {
+    height: Spacing.two,
   },
 });
