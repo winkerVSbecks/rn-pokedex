@@ -1,3 +1,4 @@
+// import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import {
   DarkTheme,
   DefaultTheme,
@@ -7,19 +8,26 @@ import { Stack } from 'expo-router';
 import React from 'react';
 import { useColorScheme } from 'react-native';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
+const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true';
+
+export const unstable_settings = {
+  initialRouteName: storybookEnabled ? '(storybook)/index' : '(pages)/index',
+};
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
+      {/* <AnimatedSplashOverlay /> */}
       <Stack>
-        <Stack.Screen name="index" options={{ title: 'Pokédex' }} />
-        <Stack.Screen name="pokemon/[id]" options={{ title: '' }} />
-        <Stack.Protected guard={__DEV__}>
-          <Stack.Screen name="storybook" />
+        <Stack.Protected guard={storybookEnabled}>
+          <Stack.Screen
+            name="(storybook)/index"
+            options={{ title: 'Storybook' }}
+          />
         </Stack.Protected>
+        <Stack.Screen name="(pages)/index" options={{ title: 'Pokédex' }} />
+        <Stack.Screen name="pokemon/[id]" options={{ title: '' }} />
       </Stack>
     </ThemeProvider>
   );

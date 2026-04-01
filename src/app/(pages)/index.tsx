@@ -1,6 +1,12 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { ActivityIndicator, Pressable, SectionList, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  SectionList,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { PokemonCard } from '@/components/pokemon-card';
 import { SearchInput } from '@/components/search-input';
@@ -30,7 +36,9 @@ export default function HomeScreen() {
       ? sections
           .map((section) => ({
             ...section,
-            data: section.data.filter((p) => p.name.includes(query.toLowerCase())),
+            data: section.data.filter((p) =>
+              p.name.includes(query.toLowerCase()),
+            ),
           }))
           .filter((s) => s.data.length > 0)
       : sections;
@@ -45,7 +53,10 @@ export default function HomeScreen() {
     return (
       <ThemedView style={styles.center}>
         <ActivityIndicator size="large" />
-        <ThemedText themeColor="textSecondary" style={{ marginTop: Spacing.three }}>
+        <ThemedText
+          themeColor="textSecondary"
+          style={{ marginTop: Spacing.three }}
+        >
           Loading Pokémon...
         </ThemedText>
       </ThemedView>
@@ -73,7 +84,7 @@ export default function HomeScreen() {
             {__DEV__ && (
               <Pressable
                 style={styles.storybookLink}
-                onPress={() => router.push('/storybook')}
+                onPress={() => router.push('(storybook)/index')}
               >
                 <ThemedText style={styles.storybookLinkText}>
                   Open Storybook
@@ -90,7 +101,9 @@ export default function HomeScreen() {
                 { backgroundColor: TypeColors[section.typeName] ?? '#888' },
               ]}
             />
-            <ThemedText style={styles.sectionTitle}>{section.typeName}</ThemedText>
+            <ThemedText style={styles.sectionTitle}>
+              {section.typeName}
+            </ThemedText>
           </ThemedView>
         )}
         renderItem={({ item: row }) => (
@@ -111,7 +124,9 @@ export default function HomeScreen() {
           </View>
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
+        SectionSeparatorComponent={() => (
+          <View style={styles.sectionSeparator} />
+        )}
       />
     </ThemedView>
   );

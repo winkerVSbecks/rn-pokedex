@@ -6,11 +6,11 @@
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
-    "ios": "expo run:ios",
+    "ios": "EXPO_PUBLIC_STORYBOOK_ENABLED='true' expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
     "storybook-generate": "sb-rn-get-stories",
-    "build:ios": "npx expo prebuild && npx expo run:ios --configuration Release",
+    "build:ios": "npx expo prebuild && EXPO_PUBLIC_STORYBOOK_ENABLED='true' npx expo run:ios --configuration Release",
     "generate-manifest": "node ./scripts/generate-manifest.mjs"
   },
   "dependencies": {
