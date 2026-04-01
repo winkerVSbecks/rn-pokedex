@@ -8,5 +8,5 @@ const config = getDefaultConfig(__dirname);
 
 module.exports = withStorybook(config, {
   enabled: true,
-  websockets: { port: 7007, host: 'localhost' },
+  websockets: { port: 7007, host: 'react-native.capture.chromatic.com' },
 });

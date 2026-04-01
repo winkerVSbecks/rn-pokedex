@@ -10,6 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "storybook-generate": "sb-rn-get-stories",
+    "build:ios": "npx expo prebuild && npx expo run:ios --configuration Release",
     "generate-manifest": "node ./scripts/generate-manifest.mjs"
   },
   "dependencies": {
