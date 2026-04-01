@@ -33,7 +33,7 @@ export function PokemonCard({ id, name, onPress }: PokemonCardProps) {
             source={getPokemonImageUrl(id)}
             style={styles.image}
             contentFit="contain"
-            // transition={200}
+            transition={200}
           />
           <ThemedText style={styles.name} numberOfLines={1}>
             {capitalize(name)}

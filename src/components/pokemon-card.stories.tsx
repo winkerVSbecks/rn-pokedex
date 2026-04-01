@@ -8,10 +8,10 @@ const meta = {
   argTypes: {
     onPress: { action: 'pressed' },
   },
-  parameters: { chromatic: { delay: 2200 } },
+  parameters: { chromatic: { delay: 500 } },
   decorators: [
     (Story) => (
-      <View style={{ padding: 16, width: 150 }}>
+      <View style={{ padding: 16, width: 250, height: 250 }}>
         <Story />
       </View>
     ),
