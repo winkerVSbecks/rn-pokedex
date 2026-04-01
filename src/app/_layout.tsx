@@ -1,4 +1,4 @@
-// import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import {
   DarkTheme,
   DefaultTheme,
@@ -18,7 +18,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      {/* <AnimatedSplashOverlay /> */}
+      <AnimatedSplashOverlay />
       <Stack>
         <Stack.Protected guard={storybookEnabled}>
           <Stack.Screen

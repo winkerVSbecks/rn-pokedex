@@ -12,7 +12,7 @@ const StorybookUIRoot = view.getStorybookUI({
   port: 7007,
   secured: true,
   // Recommended
-  onDeviceUI: false,
+  onDeviceUI: __DEV__,
   shouldPersistSelection: false,
 });
 

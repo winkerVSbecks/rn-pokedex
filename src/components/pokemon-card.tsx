@@ -27,12 +27,13 @@ export function PokemonCard({ id, name, onPress }: PokemonCardProps) {
       {({ pressed }) => (
         <ThemedView
           type="backgroundElement"
-          style={[styles.card, pressed && styles.pressed]}>
+          style={[styles.card, pressed && styles.pressed]}
+        >
           <Image
             source={getPokemonImageUrl(id)}
             style={styles.image}
             contentFit="contain"
-            transition={200}
+            // transition={200}
           />
           <ThemedText style={styles.name} numberOfLines={1}>
             {capitalize(name)}
