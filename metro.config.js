@@ -1,4 +1,3 @@
-// Learn more https://docs.expo.io/guides/customizing-metro
 const { getDefaultConfig } = require('expo/metro-config');
 const {
   withStorybook,
@@ -9,4 +8,5 @@ const config = getDefaultConfig(__dirname);
 
 module.exports = withStorybook(config, {
   enabled: true,
+  websockets: { port: 7007, host: 'localhost' },
 });

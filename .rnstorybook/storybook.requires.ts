@@ -16,6 +16,17 @@ const normalizedStories = [
       true,
       /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/
     ),
+  },
+  {
+    titlePrefix: "",
+    directory: "./src/components",
+    files: "**/*.stories.?(ts|tsx|js|jsx)",
+    importPathMatcher: /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/,
+    req: require.context(
+      '../src/components',
+      true,
+      /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/
+    ),
   }
 ];
 
@@ -36,7 +47,11 @@ const annotations = [
 ];
 
 globalThis.STORIES = normalizedStories;
-
+globalThis.STORYBOOK_WEBSOCKET = {
+  host: 'localhost',
+  port: 7007,
+  secured: false,
+};
 
 module?.hot?.accept?.();
 
