@@ -1,12 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  SectionList,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { ActivityIndicator, SectionList, StyleSheet, View } from 'react-native';
 
 import { PokemonCard } from '@/components/pokemon-card';
 import { SearchInput } from '@/components/search-input';
@@ -81,16 +75,6 @@ export default function HomeScreen() {
         ListHeaderComponent={
           <View style={styles.searchWrapper}>
             <SearchInput value={query} onChangeText={setQuery} />
-            {__DEV__ && (
-              <Pressable
-                style={styles.storybookLink}
-                onPress={() => router.push('(storybook)/index')}
-              >
-                <ThemedText style={styles.storybookLinkText}>
-                  Open Storybook
-                </ThemedText>
-              </Pressable>
-            )}
           </View>
         }
         renderSectionHeader={({ section }) => (

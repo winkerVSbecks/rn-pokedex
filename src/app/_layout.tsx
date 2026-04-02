@@ -4,8 +4,9 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import React from 'react';
+import { registerDevMenuItems } from 'expo-dev-menu';
+import { Stack, useRouter } from 'expo-router';
+import React, { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true';
@@ -16,11 +17,26 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (__DEV__) {
+      registerDevMenuItems([
+        {
+          name: 'Go to Storybook',
+          callback: () => {
+            router.navigate('/(storybook)');
+          },
+        },
+      ]);
+    }
+  }, [router]);
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AnimatedSplashOverlay />
       <Stack>
-        <Stack.Protected guard={storybookEnabled}>
+        <Stack.Protected guard={storybookEnabled || __DEV__}>
           <Stack.Screen
             name="(storybook)/index"
             options={{ title: 'Storybook' }}
