@@ -1,0 +1,42 @@
+name: Chromatic
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  chromatic:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build iOS
+        run: npm run build:ios
+
+      - name: Copy .app to storybook-static
+        run: |
+          APP_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "pokedex.app" -path "*/Release-iphonesimulator/*" | head -1)
+          cp -R "$APP_PATH" storybook-static/storybook.app
+
+      - name: Generate manifest
+        run: npm run generate-manifest
+
+      - name: Run Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          storybookBuildDir: storybook-static
