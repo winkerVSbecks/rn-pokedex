@@ -11,7 +11,10 @@
       "Bash(npm install:*)",
       "Bash(ls node_modules/storybook/manager-api*)",
       "Bash(ls node_modules/storybook/dist/manager-api*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

@@ -45,3 +45,4 @@ app-example
 *storybook.log
 storybook-static
 .claude/settings.local.json
+.claude/settings.local.json
