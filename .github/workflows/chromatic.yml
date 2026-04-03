@@ -15,12 +15,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Debug Xcode
-        run: |
-          xcodebuild -version
-          swift --version
-          xcode-select -p
-          ls /Applications/ | grep Xcode
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.3.app
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
