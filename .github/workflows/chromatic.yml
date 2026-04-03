@@ -8,12 +8,19 @@ on:
 
 jobs:
   chromatic:
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Debug Xcode
+        run: |
+          xcodebuild -version
+          swift --version
+          xcode-select -p
+          ls /Applications/ | grep Xcode
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
