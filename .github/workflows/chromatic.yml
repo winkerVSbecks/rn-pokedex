@@ -27,11 +27,28 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Prebuild
+        run: npx expo prebuild
+
       - name: Build iOS
-        run: npm run build:ios
+        run: |
+          xcodebuild \
+            -workspace ios/pokedex.xcworkspace \
+            -scheme pokedex \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -derivedDataPath ~/Library/Developer/Xcode/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+        env:
+          EXPO_PUBLIC_STORYBOOK_ENABLED: 'true'
+
+      # - name: Build iOS
+      #   run: npm run build:ios
 
       - name: Copy .app to storybook-static
         run: |
+          mkdir -p storybook-static
           APP_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "pokedex.app" -path "*/Release-iphonesimulator/*" | head -1)
           cp -R "$APP_PATH" storybook-static/storybook.app
 
