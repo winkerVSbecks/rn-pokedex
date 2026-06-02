@@ -9,7 +9,6 @@
     "ios": "EXPO_PUBLIC_STORYBOOK_ENABLED='true' expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "storybook-generate": "sb-rn-get-stories",
     "build:ios": "npx expo prebuild && EXPO_PUBLIC_STORYBOOK_ENABLED='true' npx expo run:ios --configuration Release",
     "generate-manifest": "node ./scripts/generate-manifest.mjs",
     "chromatic": "npx chromatic --project-token=chpt_ab4d36618685800 -d storybook-static"
@@ -23,9 +22,9 @@
     "@react-navigation/bottom-tabs": "^7.15.5",
     "@react-navigation/elements": "^2.9.10",
     "@react-navigation/native": "^7.1.33",
-    "@storybook/addon-ondevice-actions": "^10.3.1",
-    "@storybook/addon-ondevice-controls": "^10.3.1",
-    "@storybook/react-native": "^10.3.1",
+    "@storybook/addon-ondevice-actions": "^10.4.4",
+    "@storybook/addon-ondevice-controls": "^10.4.4",
+    "@storybook/react-native": "^10.4.4",
     "babel-loader": "^8.4.1",
     "expo": "~55.0.9",
     "expo-constants": "~55.0.9",
@@ -52,7 +51,7 @@
     "react-native-svg": "^15.15.4",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.7.2",
-    "storybook": "^10.3.3"
+    "storybook": "^10.4.2"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",

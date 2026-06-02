@@ -9,10 +9,12 @@ import { Stack, useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
+import StorybookUI from '../../.rnstorybook';
+
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true';
 
 export const unstable_settings = {
-  initialRouteName: storybookEnabled ? '(storybook)/index' : '(pages)/index',
+  initialRouteName: '(pages)/index',
 };
 
 export default function RootLayout() {
@@ -31,6 +33,17 @@ export default function RootLayout() {
       ]);
     }
   }, [router]);
+
+  // When building for Storybook/Chromatic, show Storybook at the root.
+  // (withStorybook also swaps the app entry for .rnstorybook when enabled,
+  // so this is the fallback path if the entry swap doesn't apply.)
+  if (storybookEnabled) {
+    return (
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <StorybookUI />
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

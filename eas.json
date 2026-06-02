@@ -17,7 +17,11 @@
     "storybook": {
       "withoutCredentials": true,
       "env": {
-        "EXPO_PUBLIC_STORYBOOK_ENABLED": "true"
+        "EXPO_PUBLIC_STORYBOOK_ENABLED": "true",
+        "STORYBOOK_SERVER": "false",
+        "EXPO_PUBLIC_STORYBOOK_WEBSOCKET_HOST": "react-native.capture.chromatic.com",
+        "EXPO_PUBLIC_STORYBOOK_WEBSOCKET_SECURED": "true",
+        "EXPO_PUBLIC_STORYBOOK_DISABLE_UI": "true"
       },
       "ios": {
         "simulator": true

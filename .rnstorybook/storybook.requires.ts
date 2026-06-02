@@ -2,6 +2,7 @@
 /// <reference types="@storybook/react-native/metro-env" />
 import { start, updateView, View, type Features } from '@storybook/react-native';
 
+
 import "@storybook/addon-ondevice-controls/register";
 import "@storybook/addon-ondevice-actions/register";
 
@@ -55,16 +56,16 @@ globalThis.STORYBOOK_WEBSOCKET = {
 
 module?.hot?.accept?.();
 
-
+const options = {}
 
 if (!globalThis.view) {
   globalThis.view = start({
     annotations,
     storyEntries: normalizedStories,
-
+    options,
   });
 } else {
-  updateView(globalThis.view, annotations, normalizedStories);
+  updateView(globalThis.view, annotations, normalizedStories, options);
 }
 
 export const view: View = globalThis.view;
