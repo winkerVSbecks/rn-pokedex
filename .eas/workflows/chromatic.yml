@@ -1,0 +1,40 @@
+name: Chromatic
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['*']
+
+jobs:
+  build_ios:
+    name: Build iOS Storybook
+    type: build
+    params:
+      platform: ios
+      profile: storybook
+
+  build_android:
+    name: Build Android Storybook
+    type: build
+    params:
+      platform: android
+      profile: storybook
+
+  trigger_chromatic:
+    name: Trigger Chromatic on GitHub Actions
+    needs: [build_ios, build_android]
+    steps:
+      - name: Dispatch chromatic-eas workflow
+        run: |
+          curl --fail-with-body -sS -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_DISPATCH_TOKEN}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/chromatic-eas.yml/dispatches" \
+            -d "{
+              \"ref\": \"${{ github.ref_name }}\",
+              \"inputs\": {
+                \"ios_build_id\": \"${{ needs.build_ios.outputs.build_id }}\",
+                \"android_build_id\": \"${{ needs.build_android.outputs.build_id }}\"
+              }
+            }"

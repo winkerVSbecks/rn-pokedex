@@ -13,6 +13,18 @@
     },
     "production": {
       "autoIncrement": true
+    },
+    "storybook": {
+      "withoutCredentials": true,
+      "env": {
+        "EXPO_PUBLIC_STORYBOOK_ENABLED": "true"
+      },
+      "ios": {
+        "simulator": true
+      },
+      "android": {
+        "buildType": "apk"
+      }
     }
   },
   "submit": {

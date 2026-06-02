@@ -1,0 +1,51 @@
+name: Chromatic (EAS artifacts)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ios_build_id:
+        description: 'EAS build ID for the iOS Storybook build'
+        required: true
+        type: string
+      android_build_id:
+        description: 'EAS build ID for the Android Storybook build'
+        required: true
+        type: string
+
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download EAS build artifacts
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          mkdir -p storybook-static
+          IOS_PATH=$(npx eas-cli build:download --build-id "${{ inputs.ios_build_id }}" --non-interactive --json | jq -r '.path')
+          cp -R "$IOS_PATH" storybook-static/storybook.app
+          ANDROID_PATH=$(npx eas-cli build:download --build-id "${{ inputs.android_build_id }}" --non-interactive --json | jq -r '.path')
+          cp "$ANDROID_PATH" storybook-static/storybook.apk
+
+      - name: Generate story manifest
+        run: npm run generate-manifest
+
+      - name: Run Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          storybookBuildDir: storybook-static
+          exitZeroOnChanges: true
