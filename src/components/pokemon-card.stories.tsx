@@ -23,6 +23,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Pikachu: Story = {
+  name: 'PikachuCard',
   args: {
     id: 25,
     name: 'pikachu',
